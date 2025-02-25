@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Send Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #eef2f3;
+            padding: 50px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        input, textarea {
+            width: 250px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Send Email</h2>
+    <form id="emailForm">
+        <input type="email" id="to" placeholder="Recipient Email" required><br>
+        <input type="text" id="subject" placeholder="Subject" required><br>
+        <textarea id="message" placeholder="Message" required></textarea><br>
+        <button type="submit">Send Email</button>
+    </form>
+
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById("emailForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const to = document.getElementById("to").value;
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value;
+
+            const response = await fetch("/send-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ to, subject, message }),
+            });
+
+            const result = await response.json();
+            document.getElementById("responseMessage").innerText = result.success || result.error;
+        });
+    </script>
+</body>
+</html>

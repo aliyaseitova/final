@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>Blog Posts</h1>
+
+    <!-- Form to Create a New Post -->
+    <input type="text" id="title" placeholder="Title">
+    <textarea id="content" placeholder="Content"></textarea>
+    <button onclick="createPost()">Create Post</button>
+
+    <hr>
+
+    <!-- Section to Display Posts -->
+    <div id="posts"></div>
+
+    <a href="/">Back to Home</a>
+
+    <script>
+        // Fetch and Display Posts
+        async function fetchPosts() {
+            const response = await fetch("/api/posts");
+            const posts = await response.json();
+
+            const postsDiv = document.getElementById("posts");
+            postsDiv.innerHTML = "";
+
+            posts.forEach(post => {
+                const postElement = document.createElement("div");
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <button onclick="editPost('${post._id}', '${post.title}', '${post.content}')">Edit</button>
+                    <button onclick="deletePost('${post._id}')">Delete</button>
+                    <hr>
+                `;
+                postsDiv.appendChild(postElement);
+            });
+        }
+
+        // Create Post
+        async function createPost() {
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+
+            await fetch("/api/posts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, content }),
+            });
+
+            fetchPosts(); // Refresh Posts
+        }
+
+        // Delete Post
+        async function deletePost(id) {
+            await fetch(`/api/posts/${id}`, { method: "DELETE" });
+            fetchPosts(); // Refresh Posts
+        }
+
+        // Edit Post
+        async function editPost(id, oldTitle, oldContent) {
+            const newTitle = prompt("Edit Title:", oldTitle);
+            const newContent = prompt("Edit Content:", oldContent);
+
+            if (newTitle && newContent) {
+                await fetch(`/api/posts/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title: newTitle, content: newContent }),
+                });
+                fetchPosts(); // Refresh Posts
+            }
+        }
+
+        // Load Posts on Page Load
+        fetchPosts();
+    </script>
+</body>
+</html>

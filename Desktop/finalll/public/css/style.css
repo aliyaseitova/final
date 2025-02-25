@@ -1,0 +1,107 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Header */
+h1 {
+    color: #333;
+}
+
+/* Form Styling */
+input, textarea {
+    width: 80%;
+    max-width: 500px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Posts Styling */
+#posts {
+    margin-top: 20px;
+}
+
+.post {
+    background: white;
+    padding: 15px;
+    margin: 15px auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    text-align: left;
+}
+
+.post h2 {
+    color: #222;
+}
+
+.post p {
+    color: #555;
+}
+
+/* Buttons inside posts */
+.post button {
+    background-color: #dc3545;
+    font-size: 14px;
+    padding: 8px 12px;
+}
+
+.post button:hover {
+    background-color: #c82333;
+}
+
+/* Edit button */
+.post .edit-btn {
+    background-color: #28a745;
+}
+
+.post .edit-btn:hover {
+    background-color: #218838;
+}
+
+/* Back to Home */
+a {
+    display: block;
+    margin-top: 20px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    input, textarea, button {
+        width: 90%;
+    }
+}
