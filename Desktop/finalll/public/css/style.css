@@ -1,28 +1,46 @@
 /* General Styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
+    font-family: 'Poppins', sans-serif;
     text-align: center;
-}
-
-/* Header */
-h1 {
-    color: #333;
+    padding: 50px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: #fff;
 }
 
 /* Form Styling */
+form {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 25px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+form:hover {
+    transform: translateY(-5px);
+}
+
 input, textarea {
+    padding: 12px;
+    margin: 8px 0;
     width: 80%;
     max-width: 500px;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #333;
+    transition: background 0.3s ease;
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+input:focus, textarea:focus {
+    background: rgba(255, 255, 255, 0.8);
 }
 
 textarea {
@@ -31,17 +49,21 @@ textarea {
 }
 
 button {
-    background-color: #007BFF;
+    padding: 12px 18px;
+    background: #ff7eb3;
     color: white;
-    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(255, 126, 179, 0.4);
     margin: 5px;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background: #ff5a95;
+    transform: scale(1.05);
 }
 
 /* Posts Styling */
@@ -50,21 +72,22 @@ button:hover {
 }
 
 .post {
-    background: white;
+    background: rgba(255, 255, 255, 0.2);
     padding: 15px;
     margin: 15px auto;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     max-width: 600px;
     text-align: left;
+    backdrop-filter: blur(10px);
 }
 
 .post h2 {
-    color: #222;
+    color: #fff;
 }
 
 .post p {
-    color: #555;
+    color: #eee;
 }
 
 /* Buttons inside posts */
@@ -91,7 +114,7 @@ button:hover {
 a {
     display: block;
     margin-top: 20px;
-    color: #007BFF;
+    color: #ff7eb3;
     text-decoration: none;
 }
 

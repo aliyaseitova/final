@@ -11,7 +11,9 @@ const bodyParser = require("body-parser"); // ✅ Keep this only ONCE
 require("dotenv").config();
 
 const app = express();
-const PORT = 3012;
+const PORT = 3011;
+const bmiRoutes = require("./bmiServer");
+
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +22,8 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // ✅ Keep this only ONCE
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use("/bmi", bmiRoutes);
+
 
 // MongoDB Connection
 mongoose
@@ -52,35 +56,40 @@ const requireAuth = (req, res, next) => {
   });
 };
 
-// Nodemailer Setup
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+  
+  // Email Route
+  app.get("/send-email", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "email.html"));
+  });  
+  app.post("/send-email", async (req, res) => {
+    const { to, subject, message } = req.body;
+    if (!to || !subject || !message) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
+
+    try {
+        const info = await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to,
+            subject,
+            text: message,
+        });
+        console.log("✅ Email sent:", info);
+        res.json({ success: "✅ Email sent successfully!" });
+    } catch (error) {
+        console.error("❌ Error sending email:", error);
+        res.status(500).json({ error: "Failed to send email", details: error.message });
+    }
 });
 
-// Email Route
-app.post("/send-email", async (req, res) => {
-  const { to, subject, message } = req.body;
-  if (!to || !subject || !message) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
-
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to,
-      subject,
-      text: message,
-    });
-    res.json({ success: "✅ Email sent successfully!" });
-  } catch (error) {
-    console.error("❌ Error sending email:", error);
-    res.status(500).json({ error: "Failed to send email" });
-  }
-});
+  
 
 // Routes
 app.get("/", (req, res) => res.redirect("/register"));
@@ -111,32 +120,6 @@ app.get("/mywebsite", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "mywebsite.html"));
 });
 
-app.get("/bmi", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "bmi.html"));
-});
-
-app.post("/calculate-bmi", (req, res) => {
-  const weight = parseFloat(req.body.weight);
-  const height = parseFloat(req.body.height);
-
-  if (!weight || !height || weight <= 0 || height <= 0) {
-    return res.send("<h3>Please enter valid positive numbers for weight and height.</h3><a href='/bmi'>Go Back</a>");
-  }
-
-  const bmi = (weight / (height * height)).toFixed(2);
-  let category;
-
-  if (bmi < 18.5) category = "Underweight";
-  else if (bmi >= 18.5 && bmi < 24.9) category = "Normal weight";
-  else if (bmi >= 25 && bmi < 29.9) category = "Overweight";
-  else category = "Obese";
-
-  res.send(`
-      <h2>Your BMI is: ${bmi}</h2>
-      <h3>Category: <span style="color:${category === 'Normal weight' ? 'green' : category === 'Overweight' ? 'yellow' : 'red'}">${category}</span></h3>
-      <a href='/bmi'>Go Back</a>
-  `);
-});
 
 app.get("/qr-code", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "qr.html"));
@@ -151,10 +134,69 @@ app.post("/generate-qr", async (req, res) => {
 
     const qrCode = await qr.toDataURL(text);
     res.send(`
-        <h2>Generated QR Code</h2>
-        <img src="${qrCode}" alt="QR Code">
-        <br><a href='/qr-code'>Generate Another QR Code</a>
+        <html>
+        <head>
+            <title>QR Code Generator</title>
+            <style>
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    text-align: center;
+                    background: linear-gradient(135deg, #6e8efb, #a777e3);
+                    color: #fff;
+                    padding: 50px;
+                }
+                .container {
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 25px;
+                    border-radius: 12px;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+                    display: inline-block;
+                    text-align: center;
+                    transition: transform 0.3s ease-in-out;
+                }
+                .container:hover {
+                    transform: translateY(-5px);
+                }
+                img {
+                    display: block;
+                    margin: 20px auto;
+                    border-radius: 8px;
+                    background: white;
+                    padding: 10px;
+                }
+                .btn {
+                    display: inline-block;
+                    padding: 12px 18px;
+                    margin-top: 10px;
+                    background: #ff7eb3;
+                    color: white;
+                    border: none;
+                    cursor: pointer;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    box-shadow: 0px 4px 8px rgba(255, 126, 179, 0.4);
+                }
+                .btn:hover {
+                    background: #ff5a95;
+                    transform: scale(1.05);
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Generated QR Code</h2>
+                <img src="${qrCode}" alt="QR Code">
+                <br>
+                <a href='/qr-code' class="btn">Generate Another QR Code</a>
+                <a href='/mywebsite' class="btn">Go to Dashboard</a>
+            </div>
+        </body>
+        </html>
     `);
+    
   } catch (err) {
     console.error("QR Code Generation Error:", err);
     res.send("<h3>Error generating QR code. Please check your input and try again.</h3><a href='/qr-code'>Try Again</a>");
@@ -176,13 +218,72 @@ app.post("/get-weather", async (req, res) => {
 
     const weatherData = response.data;
     res.send(`
-        <h2>Weather in ${weatherData.name}, ${weatherData.sys.country}</h2>
-        <p>Temperature: ${weatherData.main.temp}°C</p>
-        <p>Weather: ${weatherData.weather[0].description}</p>
-        <p>Humidity: ${weatherData.main.humidity}%</p>
-        <p>Wind Speed: ${weatherData.wind.speed} m/s</p>
-        <a href='/weather'>Check Another City</a>
+        <html>
+        <head>
+            <title>Weather Report</title>
+            <style>
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    text-align: center;
+                    background: linear-gradient(135deg, #6e8efb, #a777e3);
+                    color: #fff;
+                    padding: 50px;
+                }
+                .container {
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 25px;
+                    border-radius: 12px;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+                    display: inline-block;
+                    text-align: center;
+                    transition: transform 0.3s ease-in-out;
+                }
+                .container:hover {
+                    transform: translateY(-5px);
+                }
+                h2 {
+                    margin-bottom: 10px;
+                }
+                p {
+                    font-size: 18px;
+                    margin: 8px 0;
+                }
+                .btn {
+                    display: inline-block;
+                    padding: 12px 18px;
+                    margin-top: 10px;
+                    background: #ff7eb3;
+                    color: white;
+                    border: none;
+                    cursor: pointer;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    box-shadow: 0px 4px 8px rgba(255, 126, 179, 0.4);
+                }
+                .btn:hover {
+                    background: #ff5a95;
+                    transform: scale(1.05);
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Weather in ${weatherData.name}, ${weatherData.sys.country}</h2>
+                <p>🌡️ Temperature: <strong>${weatherData.main.temp}°C</strong></p>
+                <p>🌤️ Weather: <strong>${weatherData.weather[0].description}</strong></p>
+                <p>💧 Humidity: <strong>${weatherData.main.humidity}%</strong></p>
+                <p>🌬️ Wind Speed: <strong>${weatherData.wind.speed} m/s</strong></p>
+                <br>
+                <a href='/weather' class="btn">Check Another City</a>
+                <a href='/mywebsite' class = btn>Go back</a>
+            </div>
+        </body>
+        </html>
     `);
+    
   } catch (err) {
     console.error("Error fetching weather:", err.response?.data || err.message);
     res.send("<h3>City not found or API error. Please try again.</h3><a href='/weather'>Go Back</a>");
