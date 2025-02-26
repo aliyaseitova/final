@@ -3,10 +3,10 @@
 <head>
     <title>Register</title>
     <style>
-        /* General Styling */
+/* General Styling */
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
     margin: 0;
     padding: 0;
     display: flex;
@@ -14,6 +14,8 @@ body {
     align-items: center;
     height: 100vh;
     flex-direction: column; /* Aligns items vertically */
+    text-align: center;
+    color: white;
 }
 
 /* Form Container */
@@ -25,6 +27,11 @@ form {
     width: 300px;
     text-align: center;
     backdrop-filter: blur(10px);
+    transition: transform 0.3s ease-in-out;
+}
+
+form:hover {
+    transform: translateY(-5px);
 }
 
 /* Form Inputs */
@@ -37,17 +44,18 @@ input {
     font-size: 16px;
     outline: none;
     transition: all 0.3s ease-in-out;
+    background: rgba(255, 255, 255, 0.5);
+    color: #333;
 }
 
-/* Input Focus Effect */
 input:focus {
     transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.8);
 }
 
 /* Submit Button */
 button {
-    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+    background: linear-gradient(90deg, #ff7eb3, #ff5a95);
     color: white;
     border: none;
     padding: 12px;
@@ -57,10 +65,11 @@ button {
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 8px rgba(255, 126, 179, 0.4);
 }
 
 button:hover {
-    background: linear-gradient(90deg, #ff4b2b, #ff416c);
+    background: linear-gradient(90deg, #ff5a95, #ff7eb3);
     transform: scale(1.05);
 }
 
@@ -70,21 +79,22 @@ a {
     margin-top: 15px;
     text-decoration: none;
     font-weight: bold;
-    color: #ff4b2b;
+    color: #ff5a95;
     transition: color 0.3s ease-in-out;
 }
 
 a:hover {
-    color: #0f0;
+    color: #ff7eb3;
 }
 
-/* Header Styling (Moved Below Form) */
+/* Header Styling */
 h2 {
     margin-top: 20px;
     font-size: 24px;
     color: white;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
+
 
         </style>
 </head>

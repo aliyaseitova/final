@@ -3,54 +3,100 @@
 <head>
     <title>My Website</title>
     <style>
-        body {
+body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
+    text-align: center;
+    padding: 50px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: #fff;
 }
 
 /* Navigation Bar */
 .navbar {
-    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+    background: rgba(255, 255, 255, 0.2);
     display: flex;
+    justify-content: center;
     width: 100%;
-    padding: 12px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 12px 12px;
     transition: all 0.3s ease-in-out;
 }
 
 .navbar a {
     font-weight: bold;
     text-transform: uppercase;
-    padding: 10px 25px;
-    color: #fff;
+    padding: 12px 20px;
+    color: white;
     text-decoration: none;
     font-size: 1.1rem;
     transition: transform 0.3s, color 0.3s;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
 }
 
 .navbar a:hover {
-    color: #0f0;
+    color: #ff5a95;
+    background: rgba(255, 255, 255, 0.4);
     transform: scale(1.1);
 }
 
-/* Animation on Scroll */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Form Styling */
+form {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 25px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    margin-top: 100px;
 }
 
-.navbar a {
-    animation: fadeIn 0.5s ease-in-out;
+form:hover {
+    transform: translateY(-5px);
 }
+
+input {
+    padding: 12px;
+    margin: 8px 0;
+    width: 250px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #333;
+    transition: background 0.3s ease;
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+button {
+    padding: 12px 18px;
+    background: #ff7eb3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(255, 126, 179, 0.4);
+}
+
+button:hover {
+    background: #ff5a95;
+    transform: scale(1.05);
+}
+
     </style>
 </head>
 <body>
